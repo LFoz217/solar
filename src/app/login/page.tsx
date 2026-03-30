@@ -30,21 +30,24 @@ export default function LoginPage() {
     router.refresh()
   }
 
+  const inputCls =
+    'w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors'
+  const labelCls = 'block text-xs text-zinc-400 mb-1.5'
+
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
-        <Link href="/" className="block text-center text-2xl font-bold text-white mb-10">
-          Solar
+        <Link href="/" className="block text-center text-2xl font-bold text-white mb-8">
+          ☀️ Solar
         </Link>
+
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
-          <h1 className="text-xl font-semibold text-white mb-1">Organiser login</h1>
-          <p className="text-sm text-zinc-500 mb-6">Sign in to manage your events.</p>
+          <h1 className="text-xl font-semibold text-white mb-1">Sign in</h1>
+          <p className="text-sm text-zinc-500 mb-6">Welcome back.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs text-zinc-400 mb-1.5" htmlFor="email">
-                Email
-              </label>
+              <label className={labelCls} htmlFor="email">Email address</label>
               <input
                 id="email"
                 type="email"
@@ -52,14 +55,18 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors"
-                placeholder="you@example.com"
+                className={inputCls}
+                placeholder="jane@example.com"
               />
             </div>
+
             <div>
-              <label className="block text-xs text-zinc-400 mb-1.5" htmlFor="password">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className={labelCls + ' mb-0'} htmlFor="password">Password</label>
+                <Link href="/forgot-password" className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 id="password"
                 type="password"
@@ -67,7 +74,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors"
+                className={inputCls}
                 placeholder="••••••••"
               />
             </div>
@@ -81,12 +88,19 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-semibold py-2.5 rounded-lg text-sm hover:bg-zinc-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-white text-black font-semibold py-2.5 rounded-lg text-sm hover:bg-zinc-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
             >
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
         </div>
+
+        <p className="text-center text-zinc-500 text-sm mt-5">
+          Don&apos;t have an account?{' '}
+          <Link href="/register" className="text-white hover:underline">
+            Create one
+          </Link>
+        </p>
       </div>
     </div>
   )

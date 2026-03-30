@@ -35,8 +35,13 @@ export async function POST(request: Request) {
 
   // Ensure organiser record exists
   const serviceClient = await createServiceClient()
+  const meta = user.user_metadata ?? {}
+  const organiserName =
+    meta.first_name && meta.last_name
+      ? `${meta.first_name} ${meta.last_name}`
+      : (user.email ?? 'Organiser')
   await serviceClient.from('organisers').upsert(
-    { id: user.id, name: user.email ?? 'Organiser' },
+    { id: user.id, name: organiserName },
     { onConflict: 'id', ignoreDuplicates: true }
   )
 
