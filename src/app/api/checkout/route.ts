@@ -44,7 +44,7 @@ export async function POST(request: Request) {
           currency: event.currency ?? 'gbp',
           unit_amount: event.ticket_price,
           product_data: {
-            name: `${event.title} — Ticket`,
+            name: `${event.title}: Ticket`,
             description: `${event.venue} · ${new Date(event.date).toLocaleDateString('en-GB')}`,
           },
         },

@@ -127,7 +127,7 @@ export async function POST(request: Request) {
         orderId: order.id,
       })
     } catch (err) {
-      // Email failure is non-fatal — tickets are created, just log it
+      // Email failure is non-fatal; tickets are created. Just log it.
       console.error('Failed to send ticket email:', err)
     }
   }
