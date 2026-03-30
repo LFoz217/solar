@@ -54,10 +54,10 @@ export default function Navbar() {
                 Sign in
               </Link>
               <Link
-                href="/register"
+                href="/sell"
                 className="text-sm bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
-                Get started
+                Sell tickets
               </Link>
             </>
           )}

@@ -1,94 +1,134 @@
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 
-export default function LandingPage() {
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+function formatPrice(pence: number) {
+  if (pence === 0) return 'Free'
+  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(pence / 100)
+}
+
+export const revalidate = 60 // re-fetch every 60 s
+
+export default async function HomePage() {
+  const supabase = await createClient()
+
+  const { data: events } = await supabase
+    .from('events')
+    .select('id, title, description, venue, date, ticket_price, capacity')
+    .eq('is_published', true)
+    .gte('date', new Date().toISOString()) // only upcoming events
+    .order('date', { ascending: true })
+
+  const upcomingEvents = events ?? []
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto">
-        <span className="text-2xl font-bold tracking-tight">Solar</span>
-        <Link
-          href="/login"
-          className="text-sm text-zinc-400 hover:text-white transition-colors"
-        >
-          Organiser login →
+      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b border-zinc-900">
+        <Link href="/" className="text-xl font-bold tracking-tight">
+          ☀️ Solar
         </Link>
-      </nav>
-
-      {/* Hero */}
-      <section className="flex flex-col items-center justify-center text-center px-6 pt-24 pb-20">
-        <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-full px-4 py-1.5 text-xs text-zinc-400 mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-          No platform fees. Ever.
-        </div>
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight max-w-3xl leading-tight">
-          Sell tickets.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
-            No platform fees.
-          </span>{' '}
-          Only Stripe.
-        </h1>
-        <p className="mt-6 text-lg text-zinc-400 max-w-xl">
-          Solar gives promoters and event organisers a direct line to their
-          audience. You set the price, you keep the money — minus only Stripe&apos;s
-          standard processing fee.
-        </p>
-        <div className="mt-10 flex flex-col sm:flex-row gap-4">
+        <div className="flex items-center gap-5">
+          <Link
+            href="/sell"
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
+          >
+            Sell tickets →
+          </Link>
           <Link
             href="/login"
-            className="bg-white text-black font-semibold px-8 py-3.5 rounded-lg hover:bg-zinc-100 transition-colors text-sm"
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
           >
-            Create an event
+            Organiser login
           </Link>
-          <a
-            href="#how-it-works"
-            className="border border-zinc-700 text-zinc-300 font-medium px-8 py-3.5 rounded-lg hover:border-zinc-500 hover:text-white transition-colors text-sm"
-          >
-            How it works
-          </a>
         </div>
+      </nav>
+
+      {/* Header */}
+      <section className="max-w-6xl mx-auto px-6 pt-12 pb-8">
+        <h1 className="text-3xl font-bold">Upcoming events</h1>
+        <p className="mt-2 text-zinc-400 text-sm">
+          Browse and buy tickets — no account needed.
+        </p>
       </section>
 
-      {/* How it works */}
-      <section id="how-it-works" className="max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-center text-2xl font-bold mb-14 text-zinc-200">
-          Simple from start to door
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            {
-              step: '01',
-              title: 'Create your event',
-              description:
-                'Add your event details, set your ticket price, and publish in minutes. Your Stripe account receives payments directly.',
-            },
-            {
-              step: '02',
-              title: 'Sell tickets',
-              description:
-                'Share your event link. Attendees buy with a card — no account needed. Stripe handles the payment, you get the money.',
-            },
-            {
-              step: '03',
-              title: 'Scan at the door',
-              description:
-                "Use Solar's built-in QR scanner on any phone. Each ticket is validated once — no duplicates, no printouts needed.",
-            },
-          ].map(({ step, title, description }) => (
-            <div
-              key={step}
-              className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6"
+      {/* Events grid */}
+      <main className="max-w-6xl mx-auto px-6 pb-20">
+        {upcomingEvents.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="text-4xl mb-4">🎟</div>
+            <p className="text-zinc-400 text-sm">No upcoming events yet.</p>
+            <Link
+              href="/sell"
+              className="mt-4 text-sm text-amber-400 hover:text-amber-300 transition-colors"
             >
-              <div className="text-xs font-mono text-amber-500 mb-3">{step}</div>
-              <h3 className="font-semibold text-white mb-2">{title}</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">{description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+              Are you an organiser? List your event →
+            </Link>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {upcomingEvents.map((event) => (
+              <Link
+                key={event.id}
+                href={`/events/${event.id}`}
+                className="group bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-zinc-600 transition-colors flex flex-col gap-3"
+              >
+                {/* Title */}
+                <h2 className="font-semibold text-white group-hover:text-amber-400 transition-colors leading-snug">
+                  {event.title}
+                </h2>
+
+                {/* Meta */}
+                <div className="space-y-1.5 text-xs text-zinc-400">
+                  <div className="flex items-center gap-2">
+                    <span>📅</span>
+                    <span>{formatDate(event.date)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>📍</span>
+                    <span className="truncate">{event.venue}</span>
+                  </div>
+                </div>
+
+                {/* Description */}
+                {event.description && (
+                  <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
+                    {event.description}
+                  </p>
+                )}
+
+                {/* Footer */}
+                <div className="mt-auto flex items-center justify-between pt-3 border-t border-zinc-800">
+                  <span className="text-sm font-semibold text-white">
+                    {formatPrice(event.ticket_price)}
+                  </span>
+                  <span className="text-xs text-zinc-500 group-hover:text-amber-400 transition-colors">
+                    Get tickets →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-900 px-6 py-8 text-center text-xs text-zinc-600">
-        Solar — direct ticketing for independent promoters.
+      <footer className="border-t border-zinc-900 px-6 py-6 text-center text-xs text-zinc-600">
+        <span>Powered by </span>
+        <Link href="/sell" className="hover:text-zinc-400 transition-colors">
+          Solar
+        </Link>
+        {' — '}no platform fees.
       </footer>
     </div>
   )
