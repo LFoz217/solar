@@ -54,30 +54,30 @@ export default function RegisterPage() {
 
     const dateOfBirth = `${dobYear}-${String(MONTHS.indexOf(dobMonth) + 1).padStart(2, '0')}-${String(dobDay).padStart(2, '0')}`
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-          date_of_birth: dateOfBirth,
-          phone: phone || null,
-        },
-      },
+    // Create user via API (auto-confirms, no email verification needed)
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, firstName, lastName, dateOfBirth, phone }),
     })
+    const result = await res.json()
 
-    if (signUpError) {
-      setError(signUpError.message)
+    if (!res.ok || result.error) {
+      setError(result.error || 'Registration failed')
       setLoading(false)
       return
     }
 
-    if (data.user) {
-      // Create organiser profile lazily — use full name
-      await supabase
-        .from('organisers')
-        .insert({ id: data.user.id, name: `${firstName} ${lastName}` })
+    // Sign in immediately (user is already confirmed)
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (signInError) {
+      setError(signInError.message)
+      setLoading(false)
+      return
     }
 
     router.push('/dashboard')
