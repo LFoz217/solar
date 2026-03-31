@@ -32,47 +32,47 @@ export default async function HomePage() {
   const upcomingEvents = events ?? []
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white font-mono">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b border-zinc-900">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          ☀️ Solar
+      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b-2 border-zinc-800">
+        <Link href="/" className="text-xl font-bold uppercase tracking-widest">
+          ☀️ SOLAR
         </Link>
         <div className="flex items-center gap-5">
           <Link
             href="/sell"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className="text-sm uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
           >
             Sell tickets →
           </Link>
           <Link
             href="/login"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className="text-sm uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
           >
-            Organiser login
+            Promoter login
           </Link>
         </div>
       </nav>
 
       {/* Header */}
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-8">
-        <h1 className="text-3xl font-bold">Upcoming events</h1>
+        <h1 className="text-3xl font-bold uppercase tracking-widest">What&apos;s on</h1>
         <p className="mt-2 text-zinc-400 text-sm">
-          Browse and buy tickets — no account needed.
+          Grab tickets — no sign-up needed.
         </p>
       </section>
 
       {/* Events grid */}
       <main className="max-w-6xl mx-auto px-6 pb-20">
         {upcomingEvents.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="flex flex-col items-center justify-center py-24 text-center grain relative">
             <div className="text-4xl mb-4">🎟</div>
-            <p className="text-zinc-400 text-sm">No upcoming events yet.</p>
+            <p className="text-zinc-400 text-sm uppercase tracking-wider">Nothing listed yet.</p>
             <Link
               href="/sell"
-              className="mt-4 text-sm text-amber-400 hover:text-amber-300 transition-colors"
+              className="mt-4 text-sm text-amber-400 hover:text-amber-300 transition-colors uppercase tracking-wider"
             >
-              Are you an organiser? List your event →
+              Promoter? List your night →
             </Link>
           </div>
         ) : (
@@ -81,10 +81,10 @@ export default async function HomePage() {
               <Link
                 key={event.id}
                 href={`/events/${event.id}`}
-                className="group bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-zinc-600 transition-colors flex flex-col gap-3"
+                className="group bg-zinc-900 border-2 border-zinc-700 rounded-none p-5 hover:border-white transition-colors flex flex-col gap-3 grain relative"
               >
                 {/* Title */}
-                <h2 className="font-semibold text-white group-hover:text-amber-400 transition-colors leading-snug">
+                <h2 className="font-bold text-white group-hover:text-amber-400 transition-colors leading-snug uppercase tracking-wider">
                   {event.title}
                 </h2>
 
@@ -108,11 +108,11 @@ export default async function HomePage() {
                 )}
 
                 {/* Footer */}
-                <div className="mt-auto flex items-center justify-between pt-3 border-t border-zinc-800">
-                  <span className="text-sm font-semibold text-white">
+                <div className="mt-auto flex items-center justify-between pt-3 border-t-2 border-zinc-700">
+                  <span className="text-sm font-bold text-white">
                     {formatPrice(event.ticket_price)}
                   </span>
-                  <span className="text-xs text-zinc-500 group-hover:text-amber-400 transition-colors">
+                  <span className="text-xs text-zinc-500 group-hover:text-amber-400 transition-colors uppercase tracking-wider">
                     Get tickets →
                   </span>
                 </div>
@@ -123,12 +123,12 @@ export default async function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-900 px-6 py-6 text-center text-xs text-zinc-600">
+      <footer className="border-t-2 border-zinc-800 px-6 py-6 text-center text-xs text-zinc-600 uppercase tracking-widest">
         <span>Powered by </span>
         <Link href="/sell" className="hover:text-zinc-400 transition-colors">
           Solar
         </Link>
-        {' — '}no platform fees.
+        {' — '}ticketing for the underground.
       </footer>
     </div>
   )
