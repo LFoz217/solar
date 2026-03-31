@@ -1,10 +1,12 @@
 import Link from 'next/link'
+import GenerativeBackground from '@/components/GenerativeBackground'
 
 export default function SellPage() {
   return (
-    <div className="min-h-screen bg-black text-white font-mono">
+    <div className="min-h-screen bg-zinc-950 text-white font-mono relative">
+      <GenerativeBackground />
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b border-zinc-800">
+      <nav className="relative z-10 flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b border-zinc-800">
         <Link href="/" className="text-xl font-bold uppercase tracking-widest">
           ☀️ SOLAR
         </Link>
@@ -17,7 +19,7 @@ export default function SellPage() {
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center text-center px-6 pt-24 pb-20 grain relative">
+      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-24 pb-20 grain">
         <div className="inline-flex items-center gap-2 bg-zinc-900 border-2 border-zinc-700 rounded-none px-4 py-1.5 text-xs text-zinc-400 uppercase tracking-widest mb-8">
           <span className="w-1.5 h-1.5 bg-emerald-400 inline-block" />
           Ticketing for the underground
@@ -51,7 +53,7 @@ export default function SellPage() {
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="max-w-4xl mx-auto px-6 py-20">
+      <section id="how-it-works" className="relative z-10 max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-center text-2xl font-bold mb-14 text-zinc-200 uppercase tracking-widest">
           Dead simple
         </h2>
@@ -89,7 +91,7 @@ export default function SellPage() {
       </section>
 
       {/* CTA */}
-      <section className="max-w-2xl mx-auto px-6 py-16 text-center grain relative">
+      <section className="relative z-10 max-w-2xl mx-auto px-6 py-16 text-center grain">
         <h2 className="text-2xl font-bold mb-4 uppercase tracking-widest">Run your own night</h2>
         <p className="text-zinc-400 text-sm mb-8">
           Free to set up. No monthly fees. No contracts. Just you and your crowd.
@@ -103,7 +105,7 @@ export default function SellPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t-2 border-zinc-800 px-6 py-8 text-center text-xs text-zinc-600 uppercase tracking-widest">
+      <footer className="relative z-10 border-t-2 border-zinc-800 px-6 py-8 text-center text-xs text-zinc-600 uppercase tracking-widest">
         Solar — ticketing for the underground.{' '}
         <Link href="/" className="hover:text-zinc-400 transition-colors">
           Browse events

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import GenerativeBackground from '@/components/GenerativeBackground'
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-GB', {
@@ -32,9 +33,10 @@ export default async function HomePage() {
   const upcomingEvents = events ?? []
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono">
+    <div className="min-h-screen bg-zinc-950 text-white font-mono relative">
+      <GenerativeBackground />
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b-2 border-zinc-800">
+      <nav className="relative z-10 flex items-center justify-between px-6 py-5 max-w-6xl mx-auto border-b-2 border-zinc-800">
         <Link href="/" className="text-xl font-bold uppercase tracking-widest">
           ☀️ SOLAR
         </Link>
@@ -55,7 +57,7 @@ export default async function HomePage() {
       </nav>
 
       {/* Header */}
-      <section className="max-w-6xl mx-auto px-6 pt-12 pb-8">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-12 pb-8">
         <h1 className="text-3xl font-bold uppercase tracking-widest">What&apos;s on</h1>
         <p className="mt-2 text-zinc-400 text-sm">
           Grab tickets — no sign-up needed.
@@ -63,7 +65,7 @@ export default async function HomePage() {
       </section>
 
       {/* Events grid */}
-      <main className="max-w-6xl mx-auto px-6 pb-20">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 pb-20">
         {upcomingEvents.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center grain relative">
             <div className="text-4xl mb-4">🎟</div>
@@ -123,7 +125,7 @@ export default async function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t-2 border-zinc-800 px-6 py-6 text-center text-xs text-zinc-600 uppercase tracking-widest">
+      <footer className="relative z-10 border-t-2 border-zinc-800 px-6 py-6 text-center text-xs text-zinc-600 uppercase tracking-widest">
         <span>Powered by </span>
         <Link href="/sell" className="hover:text-zinc-400 transition-colors">
           Solar
