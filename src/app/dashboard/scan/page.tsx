@@ -44,7 +44,8 @@ export default async function ScanPage({
         </label>
         <form method="GET">
           <select name="event" defaultValue={selectedEvent?.id ?? ''}
-            onChange="this.form.submit()"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onChange={"this.form.submit()" as any}
             className="w-full px-3 py-2 text-sm border outline-none"
             style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)', color: 'var(--text-primary)', borderRadius: '4px' }}>
             {(events ?? []).map((e) => (
