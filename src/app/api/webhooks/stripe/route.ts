@@ -38,8 +38,7 @@ export async function POST(request: Request) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session
-
-  const { eventId, customerName, customerEmail, quantity } = session.metadata ?? {}
+  const { eventId, ticketTypeId, customerName, customerEmail, quantity } = session.metadata ?? {}
 
   if (!eventId || !customerName || !customerEmail || !quantity) {
     return NextResponse.json({ error: 'Missing metadata' }, { status: 400 })
@@ -65,6 +64,7 @@ export async function POST(request: Request) {
     .from('orders')
     .insert({
       event_id: eventId,
+      ticket_type_id: ticketTypeId || null,
       customer_email: customerEmail,
       customer_name: customerName,
       quantity: qty,
@@ -80,10 +80,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
   }
 
-  // Generate tickets (one per quantity)
-  // Ensure unique ticket numbers by generating and checking
-  const ticketsToInsert = []
+  // Generate tickets
   const usedNumbers = new Set<string>()
+  const ticketsToInsert = []
 
   for (let i = 0; i < qty; i++) {
     let ticketNumber = generateTicketNumber()
@@ -95,6 +94,7 @@ export async function POST(request: Request) {
     ticketsToInsert.push({
       order_id: order.id,
       event_id: eventId,
+      ticket_type_id: ticketTypeId || null,
       ticket_number: ticketNumber,
       qr_code: generateUUID(),
     })
@@ -108,6 +108,22 @@ export async function POST(request: Request) {
   if (ticketsError || !tickets) {
     console.error('Failed to create tickets:', ticketsError)
     return NextResponse.json({ error: 'Failed to create tickets' }, { status: 500 })
+  }
+
+  // Update ticket_type sold count
+  if (ticketTypeId) {
+    const { data: currentType } = await supabase
+      .from('ticket_types')
+      .select('sold')
+      .eq('id', ticketTypeId)
+      .single()
+
+    if (currentType) {
+      await supabase
+        .from('ticket_types')
+        .update({ sold: currentType.sold + qty })
+        .eq('id', ticketTypeId)
+    }
   }
 
   // Fetch event details for email
@@ -127,7 +143,6 @@ export async function POST(request: Request) {
         orderId: order.id,
       })
     } catch (err) {
-      // Email failure is non-fatal; tickets are created. Just log it.
       console.error('Failed to send ticket email:', err)
     }
   }

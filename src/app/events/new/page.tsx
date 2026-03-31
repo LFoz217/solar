@@ -13,8 +13,7 @@ export default async function NewEventPage() {
   return (
     <>
       <Navbar />
-      <main className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-3xl font-bold mb-8">Create event</h1>
+      <main className="min-h-screen bg-black">
         <CreateEventForm userId={user.id} />
       </main>
     </>

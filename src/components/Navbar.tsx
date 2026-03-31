@@ -32,30 +32,30 @@ export default function Navbar() {
   return (
     <nav className="border-b border-white/10 px-6 py-4">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link href="/" className="text-xl font-semibold tracking-tight">
+        <Link href="/" className="text-xl font-semibold font-mono uppercase tracking-widest">
           ☀️ Solar
         </Link>
         <div className="flex items-center gap-6">
           {user ? (
             <>
-              <Link href="/dashboard" className="text-sm text-white/70 hover:text-white transition-colors">
+              <Link href="/dashboard" className="text-sm text-white/70 hover:text-white transition-colors font-mono uppercase tracking-wider">
                 Dashboard
               </Link>
               <button
                 onClick={handleSignOut}
-                className="text-sm text-white/70 hover:text-white transition-colors"
+                className="text-sm text-white/70 hover:text-white transition-colors font-mono uppercase tracking-wider"
               >
                 Sign out
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="text-sm text-white/70 hover:text-white transition-colors">
+              <Link href="/login" className="text-sm text-white/70 hover:text-white transition-colors font-mono uppercase tracking-wider">
                 Sign in
               </Link>
               <Link
                 href="/sell"
-                className="text-sm bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="text-sm bg-white text-black px-4 py-2 rounded-none font-bold hover:bg-white/90 transition-colors font-mono uppercase tracking-wider border-2 border-white"
               >
                 Sell tickets
               </Link>

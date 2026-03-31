@@ -4,6 +4,21 @@ export interface Organiser {
   created_at: string
 }
 
+export interface TicketType {
+  id: string
+  event_id: string
+  name: string
+  description: string | null
+  price: number
+  quantity: number
+  sold: number
+  stripe_price_id: string | null
+  sort_order: number
+  sale_starts: string | null
+  sale_ends: string | null
+  created_at: string
+}
+
 export interface Event {
   id: string
   organiser_id: string
@@ -16,13 +31,20 @@ export interface Event {
   currency: string
   stripe_price_id: string | null
   stripe_product_id: string | null
+  cover_image_url: string | null
+  social_instagram: string | null
+  social_x: string | null
+  social_tiktok: string | null
+  social_website: string | null
   is_published: boolean
   created_at: string
+  ticket_types?: TicketType[]
 }
 
 export interface Order {
   id: string
   event_id: string
+  ticket_type_id: string | null
   customer_email: string
   customer_name: string
   quantity: number
@@ -36,6 +58,7 @@ export interface Ticket {
   id: string
   order_id: string
   event_id: string
+  ticket_type_id: string | null
   ticket_number: string
   qr_code: string
   is_scanned: boolean
